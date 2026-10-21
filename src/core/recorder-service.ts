@@ -1,4 +1,6 @@
 import { EventEmitter } from 'node:events';
+import { createWriteStream } from 'node:fs';
+import { join } from 'node:path';
 import {
   ChannelType, Client, GatewayIntentBits, MessageFlags, SlashCommandBuilder, Team,
   type ChatInputCommandInteraction, type Guild, type VoiceBasedChannel,
@@ -193,12 +195,23 @@ export class RecorderService extends EventEmitter {
       adapterCreator: channel.guild.voiceAdapterCreator,
       selfDeaf: false,
       selfMute: true,
+      debug: true,
     });
+    const { dir, meta } = await createSession(this.config.sessionsRoot, { guildId: channel.guild.id, channelId: channel.id });
+    // Voice/encryption diagnostics, kept with the session so a failed recording can be investigated.
+    const debugLog = createWriteStream(join(dir, 'debug.log'), { flags: 'a' });
+    connection.on('debug', (message) => {
+      if (!/"op":\s*[36]\b/.test(message)) debugLog.write(`${new Date().toISOString()} ${message}\n`);
+    });
+    connection.once(VoiceConnectionStatus.Destroyed, () => debugLog.end());
     await entersState(connection, VoiceConnectionStatus.Ready, 20_000);
 
-    const { dir, meta } = await createSession(this.config.sessionsRoot, { guildId: channel.guild.id, channelId: channel.id });
     meta.channelName = channel.name;
     const recorder = new VoiceRecorder(connection, dir, new Set([this.client!.user!.id]));
+    recorder.on('warn', (message: string) => {
+      debugLog.write(`${new Date().toISOString()} ${message}\n`);
+      this.log(message);
+    });
     recorder.on('segment', (segment) => {
       meta.segments.push(segment);
       const m = channel.guild.members.cache.get(segment.userId);
