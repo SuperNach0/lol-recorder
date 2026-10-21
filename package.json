@@ -1,0 +1,33 @@
+{
+  "name": "lol-recorder",
+  "version": "0.1.0",
+  "description": "Enregistre les parties de League of Legends avec le vocal Discord et les rejoue synchronisés.",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "record": "tsx src/cli/record.ts",
+    "replay": "tsx src/cli/replay.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@discordjs/voice": "^0.19.2",
+    "discord.js": "^14.27.0",
+    "dotenv": "^18.0.8",
+    "prism-media": "^1.3.5",
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/ws": "^8.18.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
