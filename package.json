@@ -2,10 +2,10 @@
   "name": "lol-recorder",
   "version": "0.1.0",
   "description": "Enregistre les parties de League of Legends avec le vocal Discord et les rejoue synchronisés.",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "npm run build && electron .",
+    "dist": "npm run build && electron-builder --win --publish never",
     "record": "tsx src/cli/record.ts",
     "replay": "tsx src/cli/replay.ts",
     "typecheck": "tsc --noEmit",
@@ -22,6 +22,9 @@
   "devDependencies": {
     "@types/node": "^26.6.5",
     "@types/ws": "^8.18.2",
+    "electron": "^45.0.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },
@@ -29,5 +32,40 @@
   "type": "module",
   "engines": {
     "node": ">=22.12.0"
-  }
+  },
+  "main": "dist/main.cjs",
+  "build": {
+    "appId": "io.github.supernach0.lolrecorder",
+    "productName": "LoL Recorder",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "shortcutName": "LoL Recorder",
+      "artifactName": "LoL-Recorder-Setup-${version}.${ext}"
+    },
+    "asarUnpack": [
+      "**/*.node"
+    ]
+  },
+  "author": "SuperNach0"
 }

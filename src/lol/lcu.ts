@@ -20,7 +20,7 @@ export function parseLockfile(content: string): LcuCredentials {
   return { port, password: parts[3]! };
 }
 
-export async function readLockfile(path = process.env.LOL_LOCKFILE ?? DEFAULT_LOCKFILE): Promise<LcuCredentials> {
+export async function readLockfile(path = process.env.LOL_LOCKFILE || DEFAULT_LOCKFILE): Promise<LcuCredentials> {
   return parseLockfile(await readFile(path, 'utf8'));
 }
 
