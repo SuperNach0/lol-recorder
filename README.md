@@ -2,50 +2,25 @@
 
 Enregistre tes parties de League of Legends avec le vocal Discord (une piste par personne), puis rejoue le replay officiel du client LoL synchronisé avec les voix.
 
-> État : **prototypes** (bot d'enregistrement + pilotage du replay). L'app desktop Electron viendra ensuite.
+## Installation
 
-## Comment ça marche
-
-1. Un bot Discord, lancé sur ton PC, rejoint ton salon vocal et écrit un fichier `.ogg` par prise de parole et par personne, horodaté à la milliseconde.
-2. Pendant la partie, l'app lit le temps de jeu via la [Live Client Data API](https://developer.riotgames.com/docs/lol#game-client-api) et en déduit l'heure exacte du début de partie.
-3. À la fin, elle demande au client LoL de télécharger le replay (`.rofl`).
-4. À la lecture, elle suit l'horloge du replay via la Replay API et sait qui parlait à chaque seconde.
-
-Tout est rangé dans `sessions/<date>/` : `session.json` + les fichiers audio.
-
-## Installation (Windows)
-
-1. Installe [Node.js 22 LTS](https://nodejs.org/) (22.12 ou plus).
-2. Clone le dépôt puis `npm install`.
-3. **Crée le bot Discord** :
-   - [Portail développeur Discord](https://discord.com/developers/applications) > *New Application*.
-   - Onglet *Bot* > *Reset Token*, copie le token.
-   - Onglet *OAuth2* > *URL Generator* : coche `bot` et `applications.commands`, puis les permissions *Connect*, *Speak*, *Send Messages*. Ouvre l'URL générée pour inviter le bot sur ton serveur.
-4. Copie `.env.example` en `.env` et remplis `DISCORD_TOKEN`, `DISCORD_GUILD_ID` et `DISCORD_OWNER_ID` (active le mode développeur dans Discord pour copier les identifiants).
-5. **Active la Replay API** : dans `C:\Riot Games\League of Legends\Config\game.cfg`, sous `[General]`, ajoute la ligne `EnableReplayApi=1`.
+1. Télécharge `LoL-Recorder-Setup-x.y.z.exe` dans les [Releases](https://github.com/SuperNach0/lol-recorder/releases) et lance-le.
+   Windows peut afficher « Windows a protégé votre ordinateur » car l'app n'est pas signée : clique sur *Informations complémentaires* puis *Exécuter quand même*.
+2. Au premier lancement, l'assistant te guide :
+   - créer ton bot sur le [portail développeur Discord](https://discord.com/developers/applications) et coller son token (il est chiffré sur ton PC) ;
+   - inviter le bot sur ton serveur ;
+   - activer la Replay API de LoL (un clic).
 
 ## Utilisation
 
-### Enregistrer
+- Laisse l'app ouverte (elle reste dans la zone de notification quand tu fermes la fenêtre).
+- Dès que tu entres en lobby, le bot rejoint ton salon vocal et enregistre chaque personne sur sa propre piste. Il annonce l'enregistrement dans le salon : préviens tes potes, enregistrer quelqu'un sans son accord est interdit par Discord.
+- Tu peux aussi lancer ou arrêter à la main : bouton en haut de l'app, ou `/record start` et `/record stop` dans Discord.
+- À la fin de la partie, l'app récupère le replay.
+- Dans *Mes parties*, clique sur **Revoir** puis **Lancer le replay LoL** : le son suit le replay, y compris pause, saut dans la timeline et vitesse x0.5 à x2. Tu règles le volume de chaque personne, et tu cliques sur la timeline pour sauter à un moment où quelqu'un parle.
+- Sans replay ouvert (ou si le replay a expiré), tu peux écouter le vocal seul avec le bouton Lecture.
 
-```
-npm run record
-```
-
-- Le bot rejoint automatiquement ton salon dès que tu entres en lobby LoL (si `DISCORD_OWNER_ID` est rempli et le client LoL ouvert).
-- Sinon, dans Discord : `/record start` et `/record stop`.
-- Le bot annonce l'enregistrement dans le salon. Préviens tes potes : enregistrer quelqu'un sans son accord est interdit par Discord.
-
-### Revoir
-
-```
-npm run replay -- watch <gameId>          # lance le replay (gameId dans sessions/.../session.json)
-npm run replay -- status                  # position actuelle du replay
-npm run replay -- seek 600                # saute à 10:00
-npm run replay -- sync sessions/<dossier> # affiche en direct qui parle
-```
-
-Le lecteur audio synchronisé arrive avec l'app Electron.
+Les enregistrements sont dans `Documents\LoL Recorder`.
 
 ## Limites connues
 
@@ -55,6 +30,13 @@ Le lecteur audio synchronisé arrive avec l'app Electron.
 ## Développement
 
 ```
-npm test          # tests unitaires (ffmpeg requis pour le test Ogg)
-npm run typecheck
+npm install
+npm start                                   # lance l'app
+npx tsx scripts/make-demo-session.ts <dossier>  # fausse partie pour tester le lecteur (ffmpeg requis)
+npm test                                    # tests unitaires
+npm run dist                                # installateur Windows dans release/
 ```
+
+Outils en ligne de commande (même moteur que l'app) : `npm run record` (avec un `.env`, voir `.env.example`) et `npm run replay -- status | seek <s> | watch <gameId> | sync <dossier>`.
+
+Chaque push sur `main` construit l'installateur via GitHub Actions et le publie dans les Releases.

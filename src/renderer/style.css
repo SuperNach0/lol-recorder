@@ -1,0 +1,92 @@
+:root {
+  --bg: #0f1117;
+  --panel: #171a22;
+  --panel-2: #1f2330;
+  --line: #2a2f3d;
+  --text: #e8e6e1;
+  --muted: #8a8f9c;
+  --gold: #c8aa6e;
+  --gold-2: #f0e6d2;
+  --blue: #0ac8b9;
+  --red: #e84057;
+  --green: #3dd68c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--text); font: 14px/1.5 "Segoe UI", system-ui, sans-serif; display: flex; flex-direction: column; }
+button { font: inherit; color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 7px 14px; cursor: pointer; }
+button:hover:not(:disabled) { border-color: var(--gold); }
+button:disabled { opacity: .5; cursor: default; }
+button.primary { background: var(--gold); color: #1a1408; border-color: var(--gold); font-weight: 600; }
+button.primary:hover:not(:disabled) { background: var(--gold-2); }
+button.danger { border-color: var(--red); color: var(--red); background: transparent; }
+button.link { background: none; border: none; color: var(--gold); padding: 0; text-decoration: underline; }
+input[type=range] { accent-color: var(--gold); }
+input[type=text], input[type=password] { width: 100%; font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+input:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+code { background: var(--panel-2); padding: 1px 6px; border-radius: 4px; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 16px; margin: 0 0 8px; }
+.muted { color: var(--muted); }
+.error { color: var(--red); }
+.ok { color: var(--green); }
+
+.topbar { display: flex; align-items: center; gap: 16px; padding: 10px 20px; background: var(--panel); border-bottom: 1px solid var(--line); }
+.brand { font-weight: 700; color: var(--gold); letter-spacing: .5px; }
+.pills { display: flex; gap: 8px; }
+.pill { font-size: 12px; padding: 2px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); }
+.pill.on { border-color: var(--green); color: var(--green); }
+.pill.warn { border-color: var(--gold); color: var(--gold); }
+.pill.bad { border-color: var(--red); color: var(--red); }
+.rec { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; }
+@keyframes blink { 50% { opacity: .3; } }
+
+main { flex: 1; overflow: auto; padding: 24px; }
+.wrap { max-width: 980px; margin: 0 auto; }
+
+.wizard { max-width: 640px; margin: 0 auto; }
+.step { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px; }
+.step .num { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #1a1408; font-weight: 700; margin-right: 8px; font-size: 13px; }
+.step ol { margin: 8px 0 0; padding-left: 20px; }
+.row { display: flex; gap: 10px; align-items: center; }
+
+.list-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.list-head .spacer { flex: 1; }
+.cards { display: grid; gap: 10px; }
+.card { display: grid; grid-template-columns: 6px 1fr auto; gap: 14px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px 12px 0; overflow: hidden; }
+.card .bar { align-self: stretch; background: var(--line); }
+.card.win .bar { background: var(--blue); }
+.card.loss .bar { background: var(--red); }
+.card .title { font-weight: 600; }
+.card .meta { color: var(--muted); font-size: 13px; }
+.card .actions { display: flex; gap: 8px; }
+.empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+.banner { background: #2a2110; border: 1px solid var(--gold); color: var(--gold-2); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; display: flex; gap: 12px; align-items: center; }
+.banner span { flex: 1; }
+
+.player-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.player-head .spacer { flex: 1; }
+.transport { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin-bottom: 12px; }
+.clock { font: 600 20px/1 Consolas, monospace; min-width: 120px; }
+.source { font-size: 12px; }
+.timeline { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+.lane { display: grid; grid-template-columns: 200px 1fr; gap: 12px; align-items: center; padding: 6px 0; }
+.lane + .lane { border-top: 1px solid var(--line); }
+.who { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; }
+.who .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.who input[type=range] { grid-column: 1 / -1; width: 100%; accent-color: var(--gold); }
+.who button { padding: 2px 8px; font-size: 12px; }
+.who.muted .name { color: var(--muted); text-decoration: line-through; }
+.track { position: relative; height: 26px; background: var(--bg); border-radius: 4px; cursor: pointer; overflow: hidden; }
+.seg { position: absolute; top: 4px; bottom: 4px; border-radius: 3px; min-width: 2px; opacity: .85; }
+.seg.talking { opacity: 1; box-shadow: 0 0 0 1px #fff; }
+.ruler { position: relative; height: 18px; margin-left: 212px; font-size: 11px; color: var(--muted); }
+.ruler span { position: absolute; transform: translateX(-50%); }
+.ruler .zero { color: var(--gold); }
+.playhead-layer { position: relative; }
+.playhead { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--gold); pointer-events: none; }
+.pregame { position: absolute; top: 0; bottom: 0; left: 0; background: repeating-linear-gradient(45deg, transparent 0 6px, #ffffff08 6px 12px); pointer-events: none; }
+.log { margin-top: 24px; font: 12px/1.6 Consolas, monospace; color: var(--muted); max-height: 160px; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; white-space: pre-wrap; }
+details summary { cursor: pointer; color: var(--muted); margin-top: 24px; }
